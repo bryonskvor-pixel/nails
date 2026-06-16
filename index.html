@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nails by Marissa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --nude: #F2EAE1;
+      --plum: #4A2C6E;
+      --rose: #E8A0BF;
+      --pearl: #FAFAFA;
+      --gold: #C9A96E;
+      --text-dark: #2A1A3A;
+      --text-mid: #6B5070;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--nude);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--rose);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      mix-blend-mode: multiply;
+    }
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      font-size: 14px;
+      animation: sparkle-fade 0.8s ease forwards;
+    }
+    @keyframes sparkle-fade {
+      0%   { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translate(-50%, -120%) scale(0.3) rotate(45deg); }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(242, 234, 225, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200, 169, 110, 0.2);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--plum);
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--plum); }
+    .nav-book {
+      background: var(--plum);
+      color: white !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+    }
+    .nav-book:hover { background: var(--rose) !important; color: white !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(232,160,191,0.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(74,44,110,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      line-height: 1.05;
+      color: var(--plum);
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose);
+    }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--text-mid);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-cta {
+      display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .btn-primary {
+      background: var(--plum);
+      color: white;
+      padding: 0.9rem 2.2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { background: var(--rose); transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--plum);
+      padding: 0.9rem 2.2rem;
+      border-radius: 100px;
+      border: 1.5px solid var(--plum);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.25s;
+    }
+    .btn-secondary:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-2px); }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      padding: 3rem 2rem 5rem;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .video-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .video-wrap {
+      width: 100%; max-width: 480px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(74,44,110,0.18);
+      position: relative;
+    }
+    .video-wrap video {
+      width: 100%; display: block;
+    }
+    .video-placeholder {
+      width: 100%; max-width: 480px;
+      aspect-ratio: 9/16;
+      background: linear-gradient(145deg, var(--plum) 0%, #7B4FA6 50%, var(--rose) 100%);
+      border-radius: 24px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      box-shadow: 0 30px 80px rgba(74,44,110,0.18);
+      color: white; text-align: center;
+      padding: 2rem;
+    }
+    .video-placeholder .play-icon { font-size: 3rem; }
+    .video-placeholder p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      opacity: 0.9;
+    }
+    .video-placeholder small {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LOCATIONS ── */
+    .locations {
+      padding: 5rem 2rem;
+      background: var(--plum);
+      color: white;
+      text-align: center;
+    }
+    .section-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      margin-bottom: 3rem;
+      line-height: 1.2;
+    }
+    .locations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .location-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      transition: transform 0.25s, background 0.25s;
+    }
+    .location-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.13);
+    }
+    .location-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .location-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+    .location-card p {
+      font-size: 0.85rem;
+      opacity: 0.75;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .location-badge {
+      display: inline-block;
+      background: var(--rose);
+      color: white;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      margin-top: 1rem;
+    }
+
+    /* ── GALLERY ── */
+    .gallery {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .gallery-item {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      background: linear-gradient(145deg, rgba(232,160,191,0.3), rgba(74,44,110,0.15));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover { transform: scale(1.02); }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery-item.tall { grid-row: span 2; aspect-ratio: auto; }
+    .gallery-placeholder-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--text-mid);
+      opacity: 0.6;
+    }
+
+    /* ── PRICING ── */
+    .pricing {
+      padding: 5rem 2rem;
+      background: linear-gradient(135deg, rgba(232,160,191,0.12) 0%, rgba(242,234,225,1) 50%, rgba(74,44,110,0.06) 100%);
+      text-align: center;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+    .price-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 8px 40px rgba(74,44,110,0.08);
+      text-align: left;
+      border: 1px solid rgba(200,169,110,0.15);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(74,44,110,0.14);
+    }
+    .price-card-header {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid rgba(200,169,110,0.2);
+    }
+    .price-card-icon { font-size: 1.5rem; }
+    .price-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--plum);
+    }
+    .price-line {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px dashed rgba(200,169,110,0.2);
+      font-size: 0.9rem;
+    }
+    .price-line:last-child { border-bottom: none; }
+    .price-line .item { color: var(--text-dark); }
+    .price-line .amount {
+      color: var(--plum);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .price-note {
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: var(--text-mid);
+      text-align: center;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* ── BOOKING / CONTACT ── */
+    .booking {
+      padding: 6rem 2rem;
+      text-align: center;
+      background: var(--pearl);
+      position: relative;
+      overflow: hidden;
+    }
+    .booking::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,160,191,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .booking-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+    .booking .section-title { color: var(--plum); }
+    .booking-sub {
+      font-size: 1rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .ig-btn {
+      display: inline-flex;
+      align-items: center; gap: 0.7rem;
+      background: linear-gradient(135deg, #833AB4, #FD1D1D, #F77737);
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: all 0.25s;
+      box-shadow: 0 8px 30px rgba(131,58,180,0.3);
+    }
+    .ig-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(131,58,180,0.4);
+    }
+    .ig-handle {
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+    .ig-handle a {
+      color: var(--plum);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    /* ── FAQ ── */
+    .faq {
+      padding: 5rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      border-bottom: 1px solid rgba(200,169,110,0.25);
+      padding: 1.5rem 0;
+    }
+    .faq-q {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--plum);
+      cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem;
+    }
+    .faq-toggle { font-size: 1.2rem; color: var(--rose); flex-shrink: 0; }
+    .faq-a {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-top: 0.8rem;
+      font-weight: 300;
+      display: none;
+    }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+    /* ── VENMO BUTTON ── */
+    .venmo-btn {
+      display: inline-flex;
+      align-items: center; gap: 0.7rem;
+      background: #3D95CE;
+      color: white;
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: all 0.25s;
+      box-shadow: 0 8px 30px rgba(61,149,206,0.3);
+    }
+    .venmo-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(61,149,206,0.4);
+      background: #2d7fb8;
+    }
+    .payment-row {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center; margin-top: 0;
+    }
+
+    /* ── INSTAGRAM FEED ── */
+    .ig-feed-section {
+      padding: 5rem 2rem;
+      text-align: center;
+      background: var(--pearl);
+    }
+    .ig-feed-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      max-width: 900px;
+      margin: 2.5rem auto 0;
+    }
+    .ig-feed-item {
+      aspect-ratio: 1;
+      overflow: hidden;
+      position: relative;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .ig-feed-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .ig-feed-item:hover img { transform: scale(1.05); }
+    .ig-feed-item .overlay {
+      position: absolute; inset: 0;
+      background: rgba(74,44,110,0.0);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s;
+    }
+    .ig-feed-item:hover .overlay {
+      background: rgba(74,44,110,0.35);
+    }
+    .ig-feed-item .overlay span {
+      color: white; font-size: 1.8rem;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .ig-feed-item:hover .overlay span { opacity: 1; }
+    .ig-follow-cta {
+      margin-top: 2rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text-dark);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+    footer a { color: var(--rose); text-decoration: none; }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-style: italic;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── DECORATIVE PETALS ── */
+    .petal {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.35;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(12deg); }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { display: none; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item.tall { grid-row: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">Nails by Marissa</div>
+    <ul class="nav-links">
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#locations">Locations</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank" class="nav-book">Book Now</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="petal" style="top:15%;left:8%;animation-delay:0s">🌸</span>
+    <span class="petal" style="top:25%;right:10%;animation-delay:1.5s">✨</span>
+    <span class="petal" style="top:60%;left:5%;animation-delay:3s">💅</span>
+    <span class="petal" style="bottom:20%;right:7%;animation-delay:2s">🌸</span>
+
+    <p class="hero-eyebrow">LaGrange, OH &nbsp;·&nbsp; Denison University</p>
+    <h1 class="hero-title">Nails by<br /><em>Marissa</em></h1>
+    <p class="hero-sub">Custom nail art that tells your story.<br />From everyday glam to statement sets — handcrafted with love.</p>
+    <div class="hero-cta">
+      <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank" class="btn-primary">📩 Book via Instagram</a>
+      <a href="#gallery" class="btn-secondary">View My Work</a>
+    </div>
+  </section>
+
+  <!-- Video -->
+  <section class="video-section" id="video">
+    <p class="video-label">✨ The transformation is real</p>
+    <div class="video-wrap">
+      <!-- Replace src with your actual video file path -->
+      <video controls autoplay muted loop playsinline poster="">
+        <source src="nails by marissa.mp4" type="video/mp4" />
+        <!-- Fallback if video doesn't load -->
+        <div class="video-placeholder">
+          <div class="play-icon">▶️</div>
+          <p>Watch the magic happen</p>
+          <small>nails by marissa.mp4</small>
+        </div>
+      </video>
+    </div>
+  </section>
+
+  <!-- Locations -->
+  <section class="locations reveal" id="locations">
+    <p class="section-eyebrow">Where to find me</p>
+    <h2 class="section-title">Two Locations,<br />One Artist</h2>
+    <div class="locations-grid">
+      <div class="location-card">
+        <div class="location-icon">🏡</div>
+        <h3>LaGrange, Ohio</h3>
+        <p>Home studio appointments available year-round. Perfect for locals looking for a cozy, personal nail experience.</p>
+        <span class="location-badge">Year-Round</span>
+      </div>
+      <div class="location-card">
+        <div class="location-icon">🎓</div>
+        <h3>Denison University</h3>
+        <p>Serving the Denison campus community during the school year. Campus sets, campus prices, campus energy.</p>
+        <span class="location-badge">School Year</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instagram Feed Gallery -->
+  <section class="ig-feed-section reveal" id="gallery">
+    <p class="section-eyebrow">Portfolio</p>
+    <h2 class="section-title" style="color:var(--plum)">The Work Speaks<br /><em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--rose)">for Itself</em></h2>
+
+    <!-- Official Instagram Profile Embed -->
+    <div style="display:flex; justify-content:center; margin-top:2rem;">
+      <blockquote class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/nails.by.marissa.211/?utm_source=ig_embed&amp;utm_campaign=loading"
+        data-instgrm-version="14"
+        style="background:#FFF; border:0; border-radius:16px; box-shadow:0 8px 40px rgba(74,44,110,0.12); margin:1px; max-width:540px; min-width:326px; padding:0; width:100%;">
+      </blockquote>
+    </div>
+    <script async src="//www.instagram.com/embed.js"></script>
+
+    <div class="ig-follow-cta">
+      <p style="font-size:0.82rem;color:var(--text-mid);font-style:italic;">
+        See the full portfolio on Instagram
+      </p>
+      <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank" class="ig-btn" style="margin-top:0.4rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Follow @nails.by.marissa.211
+      </a>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing reveal" id="pricing">
+    <p class="section-eyebrow">Transparent Pricing</p>
+    <h2 class="section-title" style="color:var(--plum)">Invest in Your<br /><em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--rose)">Next Set</em></h2>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-card-header">
+          <span class="price-card-icon">💅</span>
+          <span class="price-card-title">Base Services</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Starting Price</span>
+          <span class="amount">$30</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Gel X Extensions</span>
+          <span class="amount">+ $5</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Removal</span>
+          <span class="amount">+ $5</span>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card-header">
+          <span class="price-card-icon">🎨</span>
+          <span class="price-card-title">Add-Ons & Extras</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Nail Design / Art</span>
+          <span class="amount">+ $5</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Charms</span>
+          <span class="amount">+ $5–$10</span>
+        </div>
+        <div class="price-line">
+          <span class="item">French Tips</span>
+          <span class="amount">+ $5–$10</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Nail Fix</span>
+          <span class="amount">+ $5</span>
+        </div>
+        <div class="price-line">
+          <span class="item">Soak Off</span>
+          <span class="amount">+ $15</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="price-note">Prices are starting rates and may vary based on complexity.<br />DM to get an exact quote for your dream set.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq reveal" id="faq">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <p class="section-eyebrow">Got Questions?</p>
+      <h2 class="section-title" style="color:var(--plum)">Everything You<br /><em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--rose)">Need to Know</em></h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How do I book an appointment?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">Just DM <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank" style="color:var(--plum);font-weight:500;">@nails.by.marissa.211</a> on Instagram! Tell me what you're thinking — inspo pics are always welcome — and we'll lock in a time that works for you.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Where are you located?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">I work out of my home in LaGrange, Ohio year-round, and I'm available on the Denison University campus during the school year. Location details are shared when you book.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How long does a full set take?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">Most sets take between 1.5 to 2.5 hours depending on length, design complexity, and add-ons. I'll give you a better estimate when you share what you're going for!</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Do you take inspo photos?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">Absolutely — yes please! Send me everything you love. The more I know about your vision, the better I can bring it to life. Pinterest boards, Instagram saves, all of it.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can you do custom designs?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">Custom is kind of my whole thing. Whether you want florals, ghosts, minimalist lines, or something totally wild — I love a challenge. Just ask.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What forms of payment do you accept?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">Venmo and cash are both great. We can sort out the details when you book!</div>
+    </div>
+  </section>
+
+  <!-- Booking CTA -->
+  <section class="booking reveal">
+    <div class="booking-inner">
+      <p class="section-eyebrow">Ready to glow up?</p>
+      <h2 class="section-title">Book Your<br /><em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--rose)">Dream Set</em></h2>
+      <p class="booking-sub">DM me on Instagram to get started. Tell me your vibe, your inspo, your budget — and let's make something beautiful together.</p>
+      <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank" class="ig-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        DM @nails.by.marissa.211
+      </a>
+
+      <div style="margin-top:1.5rem;display:flex;flex-direction:column;align-items:center;gap:0.6rem;">
+        <p style="font-size:0.78rem;color:var(--text-mid);letter-spacing:0.08em;text-transform:uppercase;">Pay with Venmo</p>
+        <div class="payment-row">
+          <a href="https://venmo.com/mlkdance08" target="_blank" class="venmo-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M19.07 2C19.62 2.93 19.88 3.88 19.88 5.08C19.88 8.87 16.67 13.82 14.08 17H8.08L5.5 2.97L10.92 2.44L12.2 11.61C13.38 9.67 14.84 6.68 14.84 4.6C14.84 3.43 14.63 2.65 14.31 2H19.07Z"/></svg>
+            Pay @mlkdance08
+          </a>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-mid);opacity:0.7;font-style:italic;">Cash also accepted</p>
+      </div>
+
+      <p class="ig-handle">Find me on Instagram · <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank">@nails.by.marissa.211</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">Nails by Marissa</div>
+    <p>LaGrange, OH &nbsp;·&nbsp; Denison University &nbsp;·&nbsp; <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank">@nails.by.marissa.211</a></p>
+    <p style="margin-top:0.5rem;opacity:0.4;">© 2025 Nails by Marissa · All rights reserved</p>
+  </footer>
+
+  <script>
+    // Sparkle cursor
+    const cursor = document.getElementById('cursor');
+    const sparkles = ['✨','💅','🌸','⭐','💫','🌟'];
+    let lastSparkle = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+
+      const now = Date.now();
+      if (now - lastSparkle > 120) {
+        lastSparkle = now;
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        s.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+        s.style.left = e.clientX + 'px';
+        s.style.top = e.clientY + 'px';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 800);
+      }
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // FAQ toggle
+    function toggleFaq(el) {
+      const item = el.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Video fallback
+    const video = document.querySelector('video');
+    if (video) {
+      video.addEventListener('error', () => {
+        const wrap = video.parentElement;
+        wrap.innerHTML = `
+          <div class="video-placeholder">
+            <div class="play-icon">🎬</div>
+            <p>Transformation video coming soon</p>
+            <small>Add "nails by marissa.mp4" to the same folder as this HTML file</small>
+          </div>`;
+      });
+    }
+  </script>
+</body>
+</html>
