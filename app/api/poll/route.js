@@ -17,7 +17,7 @@ export async function GET(request) {
 
   try {
     const response = await fetch(
-      `https://api.us1.bfl.ai/v1/get_result?id=${encodeURIComponent(id)}`,
+      `https://api.bfl.ai/v1/get_result?id=${encodeURIComponent(id)}`
       { headers: { 'X-Key': apiKey } }
     );
 
