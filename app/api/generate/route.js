@@ -1,13 +1,12 @@
-// app/api/generate/route.js
-// Sends a hand image + nail prompt to Flux Kontext (image-to-image)
-// Returns a taskId for polling
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export async function POST(request) {
   try {
-    const { prompt, handImageUrl, nailShape, ageGroup } = await request.json();
+    const { prompt, handImagePath, nailShape, ageGroup } = await request.json();
 
-    if (!prompt || !handImageUrl) {
-      return Response.json({ error: 'Missing prompt or hand image' }, { status: 400 });
+    if (!prompt || !handImagePath) {
+      return Response.json({ error: 'Missing prompt or hand image path' }, { status: 400 });
     }
 
     const apiKey = process.env.BFL_API_KEY;
@@ -15,10 +14,18 @@ export async function POST(request) {
       return Response.json({ error: 'BFL_API_KEY not configured' }, { status: 500 });
     }
 
-    // Build final prompt — wrap if not already framed
+    // Read hand image from disk — reliable in dev and prod, no external fetch needed
+    let inputImage;
+    try {
+      const filePath = join(process.cwd(), 'public', handImagePath);
+      inputImage = readFileSync(filePath).toString('base64');
+    } catch (e) {
+      console.error('Failed to read hand image:', handImagePath, e.message);
+      return Response.json({ error: 'Hand image not found' }, { status: 400 });
+    }
+
     const finalPrompt = buildFinalPrompt(prompt, nailShape, ageGroup);
 
-    // Flux Kontext endpoint — image-to-image
     const response = await fetch('https://api.bfl.ai/v1/flux-kontext-pro', {
       method: 'POST',
       headers: {
@@ -26,12 +33,11 @@ export async function POST(request) {
         'X-Key': apiKey,
       },
       body: JSON.stringify({
-        prompt: finalPrompt,
-        input_image: handImageUrl,   // URL to the selected hand photo
-        aspect_ratio: '1:1',
+        prompt:        finalPrompt,
+        input_image:   inputImage,
+        aspect_ratio:  '1:1',
         output_format: 'jpeg',
         safety_tolerance: 2,
-        // Kontext-specific: preserve hand structure, apply nail design
         guidance: 3.5,
       }),
     });
@@ -60,10 +66,12 @@ function buildFinalPrompt(themePrompt, nailShape, ageGroup) {
     ? ' Trendy design for a teenage girl. Keep nail length short to medium.'
     : '';
 
+  const fiveNails = ' Every single nail — all five fingers — must be fully painted with the complete design. No bare nails.';
+
   if (alreadyFramed) {
-    return `${themePrompt}${ageNote} Apply the nail design to the hand in the reference image. Every single nail — all five fingers — must be fully painted with the design. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change.`;
+    return `${themePrompt}${ageNote}${fiveNails} Apply the nail design to the hand in the reference image. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change.`;
   }
 
   const shape = nailShape || 'almond';
-  return `Apply a luxury nail design to the hand in the reference image. ${shape} shaped nails. ${themePrompt}${ageNote} Every single nail — all five fingers — must be fully painted with the design. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change. Professional salon photography lighting.`;
+  return `Apply a luxury nail design to the hand in the reference image. ${shape} shaped nails. ${themePrompt}${ageNote}${fiveNails} Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change. Professional salon photography lighting.`;
 }
