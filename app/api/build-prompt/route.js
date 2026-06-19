@@ -7,7 +7,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request) {
   try {
-    const { shape, vibe, palette, details, ageGroup } = await request.json();
+    const { shape, vibe, palette, details, notes, ageGroup } = await request.json();
 
     if (!shape || !vibe || !palette) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
@@ -23,13 +23,18 @@ export async function POST(request) {
       ? `Special accent details to include: ${details.join(', ')}.`
       : 'No special accent details requested.';
 
+    const personalNotes = notes && notes.length > 0
+      ? `Personal notes from the client (incorporate these): ${notes}`
+      : '';
+
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 300,
-      system: `You are a professional nail art prompt engineer writing image generation prompts for Flux AI. 
+      system: `You are a professional nail art prompt engineer writing image generation prompts for Flux AI.
 Your prompts always produce stunning, realistic nail photography.
 Write prompts that are specific, editorial, and use real nail art vocabulary.
 Every prompt must begin with "A macro editorial photograph of" and include lighting and finish details.
+CRITICAL: The prompt must explicitly state that ALL FIVE nails on the hand are fully painted and designed — never leave any nail bare or unfinished.
 Return ONLY the prompt text, nothing else. No preamble, no explanation, no quotes.`,
       messages: [
         {
@@ -39,9 +44,10 @@ Shape: ${shape}
 Vibe: ${vibe}
 Color palette: ${palette}
 ${detailsList}
+${personalNotes}
 ${ageContext}
 
-The prompt should feel like it was written by a professional nail technician who also understands editorial photography. Be specific about colors, textures, finishes, and any special effects.`,
+The prompt should feel like it was written by a professional nail technician who also understands editorial photography. Be specific about colors, textures, finishes, and any special effects. Make sure to emphasize that every single nail — all five — is fully designed and painted.`,
         },
       ],
     });

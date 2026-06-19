@@ -69,6 +69,7 @@ export default function NailGenerator() {
   const [promptMode, setPromptMode] = useState('guided');
   const [answers, setAnswers] = useState({ shape: '', vibe: '', palette: '', details: [] });
   const [customText, setCustomText] = useState('');
+  const [builderNotes, setBuilderNotes] = useState('');
   const [buildingPrompt, setBuildingPrompt] = useState(false);
 
   // Generate
@@ -147,6 +148,7 @@ export default function NailGenerator() {
           vibe:     answers.vibe,
           palette:  answers.palette,
           details:  answers.details,
+          notes:    builderNotes.trim(),
           ageGroup: selectedHand?.group || 'adult',
         }),
       });
@@ -596,6 +598,26 @@ export default function NailGenerator() {
                       <button key={d} style={s.qOpt(answers.details.includes(d))} onClick={() => toggleDetail(d)}>{d}</button>
                     ))}
                   </div>
+                </div>
+
+                <div style={{ background: 'white', borderRadius: 10, padding: '14px 16px', marginBottom: 16, border: '1px solid #EBEBEB' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6, color: '#1a1a1a' }}>
+                    5. Any personal touches? <span style={{ fontWeight: 400, color: '#AAA' }}>(optional)</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: '#AAA', marginBottom: 8 }}>
+                    Add any notes and Claude will work them into your design.
+                  </div>
+                  <textarea
+                    value={builderNotes}
+                    onChange={e => setBuilderNotes(e.target.value)}
+                    placeholder="e.g. I want an accent nail on the ring finger, something that would go with a burgundy dress, or add a tiny heart..."
+                    style={{
+                      width: '100%', minHeight: 80, padding: '10px 12px',
+                      borderRadius: 8, border: '1px solid #E0E0E0',
+                      fontSize: 13, lineHeight: 1.6, resize: 'vertical',
+                      fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box',
+                    }}
+                  />
                 </div>
 
                 <button

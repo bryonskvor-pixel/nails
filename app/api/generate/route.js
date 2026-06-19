@@ -61,9 +61,9 @@ function buildFinalPrompt(themePrompt, nailShape, ageGroup) {
     : '';
 
   if (alreadyFramed) {
-    return `${themePrompt}${ageNote} Apply the nail design to the hand in the reference image. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change.`;
+    return `${themePrompt}${ageNote} Apply the nail design to the hand in the reference image. Every single nail — all five fingers — must be fully painted with the design. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change.`;
   }
 
   const shape = nailShape || 'almond';
-  return `Apply a luxury nail design to the hand in the reference image. ${shape} shaped nails. ${themePrompt}${ageNote} Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change. Professional salon photography lighting.`;
+  return `Apply a luxury nail design to the hand in the reference image. ${shape} shaped nails. ${themePrompt}${ageNote} Every single nail — all five fingers — must be fully painted with the design. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change. Professional salon photography lighting.`;
 }
