@@ -7,6 +7,7 @@ Your prompts always produce stunning, realistic nail photography.
 Write prompts that are specific, editorial, and use real nail art vocabulary.
 Every prompt must begin with "A macro editorial photograph of" and include lighting and finish details.
 CRITICAL: The prompt must explicitly state that ALL FIVE nails on the hand are fully painted and designed — never leave any nail bare or unfinished.
+CRITICAL: Describe ONLY the nail design — colors, textures, finishes, and effects on the nails themselves. Do NOT describe or alter the background, setting, or scene. Do NOT include tattoos, jewelry, rings, bracelets, or any accessories on the hand. The background and hand must remain exactly as they are in the reference photo.
 Return ONLY the prompt text, nothing else. No preamble, no explanation, no quotes.`;
 
 export async function POST(request) {
