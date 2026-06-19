@@ -60,11 +60,12 @@ function buildFinalPrompt(themePrompt, nailShape, ageGroup) {
     : '';
 
   const fiveNails = ' Every single nail — all five fingers — must be fully painted with the complete design. No bare nails.';
+  const restrictions = ' Keep the original background exactly as-is — do NOT change the background color or scene. Do NOT add tattoos, jewelry, rings, bracelets, or any accessories. Only decorate the nails.';
 
   if (alreadyFramed) {
-    return `${themePrompt}${ageNote}${fiveNails} Apply the nail design to the hand in the reference image. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change.`;
+    return `${themePrompt}${ageNote}${fiveNails}${restrictions} Apply the nail design to the hand in the reference image. Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change.`;
   }
 
   const shape = nailShape || 'almond';
-  return `Apply a luxury nail design to the hand in the reference image. ${shape} shaped nails. ${themePrompt}${ageNote}${fiveNails} Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change. Professional salon photography lighting.`;
+  return `Apply a luxury nail design to the hand in the reference image. ${shape} shaped nails. ${themePrompt}${ageNote}${fiveNails}${restrictions} Preserve the hand's natural skin tone, shape, and lighting. Only the nails should change. Professional salon photography lighting.`;
 }
