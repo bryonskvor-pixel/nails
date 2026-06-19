@@ -1,20 +1,9 @@
 // app/api/themes/route.js
-// Fetches all active themes from Airtable with 10-minute in-memory cache
-
-const FIELD_IDS = {
-  THEME_NAME:  'fldp5k1yeU1VvaJNM',
-  CATEGORY:    'fldinoNPAmBQAa7G3',
-  NAIL_SHAPE:  'fldGAurasQaOc6hUk',
-  FINISH_TYPE: 'fldffTi3ly0XrMrV6',
-  BASE_COLOR:  'fldrHmlQt0IWPhOj3',
-  DETAILS:     'fldj4jJaadKMODx6i',
-  AI_PROMPT:   'fldql3AYBXSuwnICE',
-  ACTIVE:      'fldUaK1CWPy0YjCoL',
-};
+// Uses field NAMES not IDs — matches CSV import column headers exactly
 
 let cache = null;
 let cacheTimestamp = 0;
-const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL = 10 * 60 * 1000;
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -43,13 +32,13 @@ export async function GET(request) {
       headers: { 'X-Cache': 'MISS' }
     });
   } catch (err) {
-    console.error('Airtable error:', err);
+    console.error('Airtable error:', err.message);
     if (cache) {
       return Response.json({ themes: cache, count: cache.length }, {
         headers: { 'X-Cache': 'STALE' }
       });
     }
-    return Response.json({ error: 'Failed to fetch themes' }, { status: 500 });
+    return Response.json({ error: 'Failed to fetch themes', detail: err.message }, { status: 500 });
   }
 }
 
@@ -59,9 +48,6 @@ async function fetchAllThemes(apiKey, baseId, tableId) {
 
   do {
     const params = new URLSearchParams();
-    Object.values(FIELD_IDS).forEach(id => params.append('fields[]', id));
-    // No filter — return all records
-// params.set('filterByFormula', `{${FIELD_IDS.ACTIVE}} = TRUE()`);
     params.set('pageSize', '100');
     if (offset) params.set('offset', offset);
 
@@ -70,27 +56,38 @@ async function fetchAllThemes(apiKey, baseId, tableId) {
       { headers: { Authorization: `Bearer ${apiKey}` } }
     );
 
-    if (!res.ok) throw new Error(`Airtable ${res.status}`);
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Airtable ${res.status}: ${errText}`);
+    }
+
     const data = await res.json();
 
     for (const record of data.records) {
       const f = record.fields;
-   
+      const themeName = f['Theme Name'] || '';
+
+      // Skip empty rows or any stray header row imported as data
+      if (!themeName || themeName === 'Theme Name') continue;
+
       themes.push({
         id:         record.id,
-        themeName:  f[FIELD_IDS.THEME_NAME]  || '',
-        category:   f[FIELD_IDS.CATEGORY]    || 'Editorial & Specialty',
-        nailShape:  f[FIELD_IDS.NAIL_SHAPE]  || 'Almond',
-        finishType: f[FIELD_IDS.FINISH_TYPE] || 'High-Gloss',
-        baseColor:  f[FIELD_IDS.BASE_COLOR]  || '',
-        details:    f[FIELD_IDS.DETAILS]     || '',
-        aiPrompt:   f[FIELD_IDS.AI_PROMPT]   || '',
+        themeName,
+        category:   f['Category']    || 'Editorial & Specialty',
+        nailShape:  f['Nail Shape']  || 'Almond',
+        finishType: f['Finish Type'] || 'High-Gloss',
+        baseColor:  f['Base Color']  || '',
+        details:    f['Details']     || '',
+        aiPrompt:   f['AI Prompt']   || '',
       });
     }
 
     offset = data.offset || null;
   } while (offset);
 
-  themes.sort((a, b) => a.category.localeCompare(b.category) || a.themeName.localeCompare(b.themeName));
+  themes.sort((a, b) =>
+    a.category.localeCompare(b.category) || a.themeName.localeCompare(b.themeName)
+  );
+
   return themes;
 }
