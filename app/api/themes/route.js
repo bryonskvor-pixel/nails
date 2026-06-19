@@ -60,7 +60,8 @@ async function fetchAllThemes(apiKey, baseId, tableId) {
   do {
     const params = new URLSearchParams();
     Object.values(FIELD_IDS).forEach(id => params.append('fields[]', id));
-    params.set('filterByFormula', `{${FIELD_IDS.ACTIVE}} = TRUE()`);
+    // No filter — return all records
+// params.set('filterByFormula', `{${FIELD_IDS.ACTIVE}} = TRUE()`);
     params.set('pageSize', '100');
     if (offset) params.set('offset', offset);
 
@@ -74,7 +75,7 @@ async function fetchAllThemes(apiKey, baseId, tableId) {
 
     for (const record of data.records) {
       const f = record.fields;
-      if (!f[FIELD_IDS.ACTIVE]) continue;
+   
       themes.push({
         id:         record.id,
         themeName:  f[FIELD_IDS.THEME_NAME]  || '',
