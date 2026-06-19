@@ -11,20 +11,11 @@ const HANDS = [
   { id: 'hand-04', src: '/hands/hand-04.jpg', label: 'Warm / Golden', group: 'adult' },
   { id: 'hand-05', src: '/hands/hand-05.jpg', label: 'Olive',         group: 'adult' },
   { id: 'hand-06', src: '/hands/hand-06.jpg', label: 'Deep / Warm',   group: 'adult' },
-  { id: 'hand-07', src: '/hands/hand-07.jpg', label: 'Deep / Rich',   group: 'adult' },
-  { id: 'hand-08', src: '/hands/hand-08.jpg', label: 'Deep / Cool',   group: 'adult' },
-  { id: 'hand-09', src: '/hands/hand-09.jpg', label: 'Fair',          group: 'teen'  },
-  { id: 'hand-10', src: '/hands/hand-10.jpg', label: 'Medium',        group: 'teen'  },
-  { id: 'hand-11', src: '/hands/hand-11.jpg', label: 'Deep',          group: 'teen'  },
-  { id: 'hand-12', src: '/hands/hand-12.jpg', label: 'Fair',          group: 'tween' },
-  { id: 'hand-13', src: '/hands/hand-13.jpg', label: 'Medium',        group: 'tween' },
-  { id: 'hand-14', src: '/hands/hand-14.jpg', label: 'Deep',          group: 'tween' },
+  { id: 'hand-07', src: '/hands/hand-07.png', label: 'Deep / Rich',   group: 'adult' },
 ];
 
 const HAND_GROUPS = [
   { id: 'adult', label: 'Adult' },
-  { id: 'teen',  label: 'High School' },
-  { id: 'tween', label: 'Middle School' },
 ];
 
 const SHAPES   = ['Almond', 'Coffin', 'Stiletto', 'Square', 'Oval', 'Round'];
