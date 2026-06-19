@@ -166,6 +166,21 @@
       transition: all 0.25s;
     }
     .btn-secondary:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-2px); }
+    .btn-generator {
+      background: linear-gradient(135deg, var(--rose) 0%, #C96DB5 100%);
+      color: white;
+      padding: 0.9rem 2.2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      box-shadow: 0 8px 28px rgba(232,160,191,0.45);
+    }
+    .btn-generator:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(232,160,191,0.6); filter: brightness(1.05); }
 
     /* ── VIDEO SECTION ── */
     .video-section {
@@ -613,6 +628,7 @@
     <p class="hero-sub">Custom nail art that tells your story.<br />From everyday glam to statement sets — handcrafted with love.</p>
     <div class="hero-cta">
       <a href="https://www.instagram.com/nails.by.marissa.211/" target="_blank" class="btn-primary">📩 Book via Instagram</a>
+      <a href="/generator" class="btn-generator">✦ Design Your Look</a>
       <a href="#gallery" class="btn-secondary">View My Work</a>
     </div>
   </section>
