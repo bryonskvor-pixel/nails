@@ -332,11 +332,50 @@ export default function NailGenerator() {
     genProgress < 55 ? 'Applying nail design...' :
     genProgress < 82 ? 'Adding finishing touches...' : 'Almost ready...';
 
-  function useTheme(theme) {
-    setFinalPrompt(theme.aiPrompt);
-    setResultMeta(theme.themeName);
+  async function useTheme(theme) {
     setSelectedTheme(theme);
+    setResultMeta(theme.themeName);
+
+    const isDetailed = theme.aiPrompt.length >= 200 ||
+      /^(a macro|an editorial|a crisp|a close-up|a detailed|a stunning|a beautiful)/i.test(theme.aiPrompt.trim());
+
+    if (isDetailed) {
+      setFinalPrompt(theme.aiPrompt);
+      setTab('generate');
+      return;
+    }
+
+    // Short/minimal Airtable prompt — expand with Claude before generating
+    setBuildingPrompt(true);
+    setFinalPrompt('');
     setTab('generate');
+
+    try {
+      const data = await fetch('/api/build-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shape:        theme.nailShape || 'Almond',
+          vibe:         'Elegant & luxurious',
+          palette:      theme.baseColor || theme.finishType || 'Custom',
+          details:      [],
+          notes:        '',
+          ageGroup:     selectedHand?.group || 'adult',
+          themeContext: {
+            themeName:  theme.themeName,
+            aiPrompt:   theme.aiPrompt,
+            finishType: theme.finishType,
+            baseColor:  theme.baseColor,
+            details:    theme.details,
+          },
+        }),
+      }).then(r => r.json());
+      setFinalPrompt(data.prompt || theme.aiPrompt);
+    } catch {
+      setFinalPrompt(theme.aiPrompt);
+    } finally {
+      setBuildingPrompt(false);
+    }
   }
 
   function toggleDetail(d) {
@@ -589,8 +628,8 @@ export default function NailGenerator() {
                 <div style={s.sectionLabel}>Your prompt</div>
                 <textarea
                   value={finalPrompt}
-                  onChange={e => setFinalPrompt(e.target.value)}
-                  placeholder="Select a theme or build a prompt first..."
+                  onChange={e => !buildingPrompt && setFinalPrompt(e.target.value)}
+                  placeholder={buildingPrompt ? 'Crafting your personalized prompt...' : 'Select a theme or build a prompt first...'}
                   style={{ width: '100%', minHeight: 140, padding: '10px 12px', borderRadius: 10, border: '1px solid #E0E0E0', fontSize: 12, lineHeight: 1.6, resize: 'vertical', fontFamily: 'inherit', outline: 'none', marginBottom: 12, boxSizing: 'border-box' }}
                 />
 
@@ -601,8 +640,8 @@ export default function NailGenerator() {
                   </div>
                 )}
 
-                <button style={s.primaryBtn(!finalPrompt.trim() || !selectedHand || generating)} disabled={!finalPrompt.trim() || !selectedHand || generating} onClick={handleGenerate}>
-                  {generating ? 'Generating...' : 'Generate design ✦'}
+                <button style={s.primaryBtn(!finalPrompt.trim() || !selectedHand || generating || buildingPrompt)} disabled={!finalPrompt.trim() || !selectedHand || generating || buildingPrompt} onClick={handleGenerate}>
+                  {generating ? 'Generating...' : buildingPrompt ? 'Crafting prompt...' : 'Generate design ✦'}
                 </button>
 
                 {genError && <div style={{ marginTop: 10, fontSize: 13, color: '#C0392B', lineHeight: 1.5 }}>{genError}</div>}

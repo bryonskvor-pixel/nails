@@ -1,12 +1,9 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
 export async function POST(request) {
   try {
     const { prompt, handImagePath, nailShape, ageGroup } = await request.json();
 
     if (!prompt || !handImagePath) {
-      return Response.json({ error: 'Missing prompt or hand image path' }, { status: 400 });
+      return Response.json({ error: 'Missing prompt or hand image' }, { status: 400 });
     }
 
     const apiKey = process.env.BFL_API_KEY;
@@ -14,15 +11,11 @@ export async function POST(request) {
       return Response.json({ error: 'BFL_API_KEY not configured' }, { status: 500 });
     }
 
-    // Read hand image from disk — reliable in dev and prod, no external fetch needed
-    let inputImage;
-    try {
-      const filePath = join(process.cwd(), 'public', handImagePath);
-      inputImage = readFileSync(filePath).toString('base64');
-    } catch (e) {
-      console.error('Failed to read hand image:', handImagePath, e.message);
-      return Response.json({ error: 'Hand image not found' }, { status: 400 });
-    }
+    // Construct absolute URL from request host so BFL can fetch the hand image.
+    // Works on any Vercel deployment or custom domain automatically.
+    const proto = request.headers.get('x-forwarded-proto') || 'https';
+    const host  = request.headers.get('host') || '';
+    const handImageUrl = `${proto}://${host}${handImagePath}`;
 
     const finalPrompt = buildFinalPrompt(prompt, nailShape, ageGroup);
 
@@ -33,12 +26,12 @@ export async function POST(request) {
         'X-Key': apiKey,
       },
       body: JSON.stringify({
-        prompt:        finalPrompt,
-        input_image:   inputImage,
-        aspect_ratio:  '1:1',
-        output_format: 'jpeg',
+        prompt:           finalPrompt,
+        input_image:      handImageUrl,
+        aspect_ratio:     '1:1',
+        output_format:    'jpeg',
         safety_tolerance: 2,
-        guidance: 3.5,
+        guidance:         3.5,
       }),
     });
 
