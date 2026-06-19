@@ -15,11 +15,11 @@ export async function GET(request) {
     return Response.json({ error: 'BFL_API_KEY not configured' }, { status: 500 });
   }
 
-  try {
-    const response = await fetch(
-     `https://api.bfl.ai/v1/get_result?id=${encodeURIComponent(id)}`
-      { headers: { 'X-Key': apiKey } }
-    );
+ try {
+      const response = await fetch(
+        `https://api.bfl.ai/v1/get_result?id=${encodeURIComponent(id)}`,
+        { headers: { 'X-Key': apiKey } }
+      );
 
     if (!response.ok) {
       const err = await response.text();
