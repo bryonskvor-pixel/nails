@@ -19,7 +19,7 @@ export async function POST(request) {
     const finalPrompt = buildFinalPrompt(prompt, nailShape, ageGroup);
 
     // Flux Kontext endpoint — image-to-image
-    const response = await fetch('https://api.us1.bfl.ai/v1/flux-kontext-pro', {
+    const response = await fetch('https://api.bfl.ai/v1/flux-kontext-pro', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
