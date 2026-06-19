@@ -285,7 +285,7 @@ export default function NailGenerator() {
       fontSize: 12,
       padding: '4px 10px',
       borderRadius: 20,
-      background: credits?.remaining > 0 ? PINKLT : '#FFF3F3',
+      background: credits?.remaining > 10 ? PINKLT : '#FFF3F3',
       color: credits?.remaining > 0 ? PINKDK : '#C0392B',
       fontWeight: 500,
     },
